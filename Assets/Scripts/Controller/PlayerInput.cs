@@ -34,6 +34,7 @@ namespace Controller
 
         public void OnFire(InputValue value)
         {
+            IsAttack = value.isPressed;
         }
     }
 }

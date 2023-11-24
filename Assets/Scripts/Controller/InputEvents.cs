@@ -7,15 +7,42 @@ namespace Controller
     {
         public event Action<Vector2> OnMoveEvent;
         public event Action<Vector2> OnLookEvent;
+        public event Action OnAttackEvent;
+        private float _attackTerm = float.MaxValue;
+        protected bool IsAttack { get; set; }
 
-        public void CallMoveEvent(Vector2 direction)
+        protected virtual void Update()
+        {
+            AttackDelay();
+        }
+
+        private void AttackDelay()
+        {
+            if (_attackTerm <= 0.2f)
+            {
+                _attackTerm += Time.deltaTime;
+            }
+            
+            if (IsAttack && _attackTerm > 0.2f)
+            {
+                _attackTerm = 0;
+                CallAttackEvent();
+            }
+        }
+
+        protected void CallMoveEvent(Vector2 direction)
         {
             OnMoveEvent?.Invoke(direction);
         }
 
-        public void CallLookEvent(Vector2 direction)
+        protected void CallLookEvent(Vector2 direction)
         {
             OnLookEvent?.Invoke(direction);
+        }
+
+        protected void CallAttackEvent()
+        {
+            OnAttackEvent?.Invoke();
         }
     }
 }
